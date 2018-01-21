@@ -26,11 +26,17 @@ export default class SingleDeck extends Component {
             </Text>
           </Text>
         </View>
-        <View style={{flex:1}}>
+        <View style={styles.buttons}>
           <TouchableOpacity style={[styles.button, {backgroundColor: white}]}>
             <Text style={[styles.btn, styles.btn1]}>Add Card</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.button, {backgroundColor: black}]}>
+          <TouchableOpacity 
+            style={[styles.button, {backgroundColor: black}]}
+            onPress={() => this.props.navigation.navigate(
+              'Quiz',
+              { questions: card.questions }
+            )}
+          >
             <Text style={[styles.btn, styles.btn2]}>Start Quiz</Text>
           </TouchableOpacity>
         </View>
@@ -43,12 +49,17 @@ export default class SingleDeck extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    padding: 8
   },
   main: {
     flex:1,
     flexDirection:'column',
     justifyContent:'center'
+  },
+  buttons:{
+    flex:1,
+    justifyContent: 'flex-end'
   },
   button: {
     paddingTop: 15,

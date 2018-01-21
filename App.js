@@ -6,6 +6,7 @@ import { yellow, white, black } from './utils/colors'
 import Decks from './components/Decks'
 import NewDeck from './components/NewDeck'
 import SingleDeck from './components/SingleDeck'
+import Quiz from './components/Quiz'
 
 function MainStatusBar ({backgroundColor, ...props}) {
   return (
@@ -54,6 +55,16 @@ const MainNavigator = StackNavigator({
   },
   SingleDeck: {
     screen: SingleDeck,
+    navigationOptions: {
+      headerTintColor: yellow,
+      headerStyle: {
+        backgroundColor: black,
+        height: 56
+      }
+    }
+  },
+  Quiz: {
+    screen: Quiz,
     navigationOptions: {
       headerTintColor: yellow,
       headerStyle: {

@@ -20,7 +20,6 @@ export default class Decks extends Component {
           renderItem={({item}) => 
             <View style={styles.item}>
               <TouchableOpacity 
-              card={item}
                 onPress={() => this.props.navigation.navigate(
                 'SingleDeck',
                 { item: item }
