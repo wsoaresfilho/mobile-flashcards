@@ -23,6 +23,13 @@ const mock = {
   }
 }
 
-export default function Mock() {
-  return mock;
+export function getMock() {
+  return Object.values(mock)
+}
+
+export function addMock(deck) {
+  mock[deck] = {
+    title: deck,
+    questions: []
+  }
 }

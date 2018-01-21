@@ -7,16 +7,22 @@ import {
   TouchableOpacity
 } from 'react-native'
 import { black, gray } from '../utils/colors'
-import Mock from '../utils/api'
-
-const mock = Object.values(Mock())
+import { getMock } from '../utils/api'
 
 export default class Decks extends Component {
+  state = {
+    decks: []
+  }
+  componentDidMount() {
+    this.setState({decks: getMock()})
+  }
   render() {
+    const { decks } = this.state
+
     return(
       <View style={styles.container}>
         <FlatList
-          data={mock}
+          data={decks}
           renderItem={({item}) => 
             <View style={styles.item}>
               <TouchableOpacity 
