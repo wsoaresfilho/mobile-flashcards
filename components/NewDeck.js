@@ -7,7 +7,7 @@ import {
   TextInput, 
   KeyboardAvoidingView } from 'react-native'
 import { black, white, gray } from '../utils/colors'
-import { addMock } from '../utils/api'
+import { saveDeckTitle } from '../utils/api'
 
 export default class NewDeck extends Component {
   state = {
@@ -24,7 +24,7 @@ export default class NewDeck extends Component {
     this.props.navigation.navigate('Decks')
   }
   onSubmit = () => {
-    addMock(this.state.deckTitle)
+    saveDeckTitle(this.state.deckTitle)
     this.clear()
     this.toHome()
   }

@@ -7,15 +7,31 @@ import {
   TouchableOpacity
 } from 'react-native'
 import { black, gray } from '../utils/colors'
-import { getMock } from '../utils/api'
+import { getDecks } from '../utils/api'
 
 export default class Decks extends Component {
   state = {
     decks: []
   }
   componentDidMount() {
-    this.setState({decks: getMock()})
+    console.log("Antes")
+    getDecks().then(
+      function (decks) {
+        console.log("component")
+        console.log(decks)
+        this.setState({ decks })
+      }.bind(this),
+      function(erro) {
+        console.log("falhou")
+        console.log(erro)
+      }
+    ).catch(function(error) {
+        console.log('There has been a problem with your fetch operation: ' + error.message)
+        throw error
+    });
+    console.log("depois")
   }
+  
   render() {
     const { decks } = this.state
 
