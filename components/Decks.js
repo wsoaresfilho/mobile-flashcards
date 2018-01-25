@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { 
   Text, 
   View, 
@@ -8,32 +9,30 @@ import {
 } from 'react-native'
 import { black, gray } from '../utils/colors'
 import { getDecks } from '../utils/api'
+import { getAllDecks } from '../actions'
 
-export default class Decks extends Component {
-  state = {
-    decks: []
-  }
+class Decks extends Component {
   componentDidMount() {
-    console.log("Antes")
+    console.log("Começo de componentDidMount Decks.js")
     getDecks().then(
-      function (decks) {
-        console.log("component")
+      (decks) => {
+        console.log("Called getDecks at Decks.js")
         console.log(decks)
-        this.setState({ decks })
-      }.bind(this),
-      function(erro) {
-        console.log("falhou")
+        this.props.loadDecks(decks)
+      },
+      (erro) => {
+        console.log("failed at Decks.js!")
         console.log(erro)
       }
-    ).catch(function(error) {
+    ).catch((error) =>  {
         console.log('There has been a problem with your fetch operation: ' + error.message)
         throw error
-    });
-    console.log("depois")
+    })
+    console.log("Fim de componentDidMount Decks.js")
   }
   
   render() {
-    const { decks } = this.state
+    const { decks } = this.props
 
     return(
       <View style={styles.container}>
@@ -63,6 +62,20 @@ export default class Decks extends Component {
   }
 }
 
+function mapStateToProps (decks) {
+  console.log("mapStateToProps")
+  console.log(decks)
+  return {
+    decks: decks.allDecks
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    loadDecks: (decks) => dispatch(getAllDecks(decks))
+  }
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -83,3 +96,8 @@ const styles = StyleSheet.create({
     fontSize: 20
   }
 })
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Decks)

@@ -10,7 +10,7 @@ export function getDecks () {
 }
 
 function formatDecksResults (results) {
-  console.log("formatDecksResults")
+  console.log("Called the formatDecksResults func of API")
   return results === null
     ? setDummyData()
     : returnDecksArrays(JSON.parse(results))
@@ -43,13 +43,13 @@ function setDummyData () {
   }
 
   AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(mock))
-  console.log("setDummyData")
+  console.log("setDummyData from API")
   console.log(mock)
   return Object.values(mock)
 }
 
 function returnDecksArrays (decks) {
-  console.log("returnDecksArrays")
+  console.log("Called the returnDecksArrays func of API")
   console.log(decks)
   return Object.values(decks)
 }
@@ -64,10 +64,12 @@ export function getDeck (id) {
 }
 
 export function saveDeckTitle (title) {
-  console.log("saveDeckTitle")
+  console.log("Called the saveDeckTitle func from API")
   console.log(title)
+  const trimtitle = title.replace(/ /g,'')
+  console.log(trimtitle)
   return AsyncStorage.mergeItem(STORAGE_KEY, JSON.stringify({
-    [title]: {
+    [trimtitle]: {
       title: title,
       questions: []
     }

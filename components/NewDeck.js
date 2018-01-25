@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { 
   Text, 
   View, 
@@ -8,8 +9,9 @@ import {
   KeyboardAvoidingView } from 'react-native'
 import { black, white, gray } from '../utils/colors'
 import { saveDeckTitle } from '../utils/api'
+import { addDeck } from '../actions'
 
-export default class NewDeck extends Component {
+class NewDeck extends Component {
   state = {
     canSubmit: false,
     deckTitle: ''
@@ -24,9 +26,23 @@ export default class NewDeck extends Component {
     this.props.navigation.navigate('Decks')
   }
   onSubmit = () => {
-    saveDeckTitle(this.state.deckTitle)
+    const name = this.state.deckTitle
+    saveDeckTitle(name).then(
+      () => {
+        console.log(`Before addDeck = ${name}`)
+        this.props.addNewDeck(name)
+        this.toHome()
+      },
+      (erro) => {
+        console.log("failed at Decks.js!")
+        console.log(erro)
+      }
+    ).catch((error) => {
+      console.log('There has been a problem with your fetch operation: ' + error.message)
+      throw error
+    })
+    console.log("Fim de componentDidMount NewDecks.js")
     this.clear()
-    this.toHome()
   }
   onChangeText = (text) => {
     if(text.length > 0) {
@@ -58,6 +74,20 @@ export default class NewDeck extends Component {
           </TouchableOpacity>
       </KeyboardAvoidingView>
     )
+  }
+}
+
+function mapStateToProps (decks) {
+  console.log("mapStateToProps")
+  console.log(decks)
+  return {
+    decks: decks.allDecks
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    addNewDeck: (title) => dispatch(addDeck(title))
   }
 }
 
@@ -102,3 +132,8 @@ const styles = StyleSheet.create({
     marginBottom: 20
   }
 })
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NewDeck)

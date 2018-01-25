@@ -1,4 +1,7 @@
 import React from 'react';
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+import reducer from './reducers'
 import { View, StatusBar, Platform } from 'react-native';
 import { TabNavigator, StackNavigator } from 'react-navigation'
 import { Constants } from 'expo'
@@ -78,10 +81,12 @@ const MainNavigator = StackNavigator({
 export default class App extends React.Component {
   render() {
     return (
-      <View style={{flex: 1}}>
-        <MainStatusBar backgroundColor={yellow} barStyle="light-content" />
-        <MainNavigator />
-      </View>
-    );
+      <Provider store={createStore(reducer)}>
+        <View style={{flex: 1}}>
+          <MainStatusBar backgroundColor={yellow} barStyle="light-content" />
+          <MainNavigator />
+        </View>
+      </Provider>
+    )
   }
 }
