@@ -36,24 +36,19 @@ class NewCard extends Component {
   onSubmit = () => {
     const card = this.state.card
     const title = this.props.navigation.state.params.title
-    console.log("on submit NewCard")
-    console.log(title)
-    console.log(card)
+
     addCardToDeck(title, card).then(
       () => {
-        console.log(`Before addCard = ${card}`)
         this.props.addNewCard(card)
         this.props.goBack()
       },
       (erro) => {
-        console.log("failed at Decks.js!")
-        console.log(erro)
+        console.log(`Failed at onSubmit on NewDecks.js! Erro: ${erro}`)
       }
     ).catch((error) => {
       console.log('There has been a problem with your fetch operation: ' + error.message)
       throw error
     })
-    console.log("Fim de componentDidMount NewCard.js")
     this.clear()
   }
   onChangeQuestionText = (text) => {
