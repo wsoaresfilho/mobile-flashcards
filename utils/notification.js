@@ -1,7 +1,7 @@
 import { AsyncStorage } from 'react-native'
 import { Notifications, Permissions } from 'expo'
 
-const NOTIFICATION_KEY = 'FlashcardsApp:notifications'
+const NOTIFICATION_KEY = 'notifications:FlashcardsApp'
 
 export function clearLocalNotification () {
   return AsyncStorage.removeItem(NOTIFICATION_KEY)
@@ -36,8 +36,8 @@ export function setLocalNotification () {
 
               let tomorrow = new Date()
               tomorrow.setDate(tomorrow.getDate() + 1)
-              tomorrow.setHours(13)
-              tomorrow.setMinutes(0)
+              tomorrow.setHours(18)
+              tomorrow.setMinutes(00)
 
               Notifications.scheduleLocalNotificationAsync(
                 createNotification(),
