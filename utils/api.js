@@ -1,19 +1,23 @@
-import { AsyncStorage } from 'react-native'
+import { AsyncStorage, processColor } from 'react-native'
 
 const STORAGE_KEY = 'FlashcardsApp'
 
+export function clearStorage () {
+  return AsyncStorage.removeItem(STORAGE_KEY).then(() => {console.log("clearStorage")})
+}
+
 export function getDecks () {
-  return AsyncStorage.getItem(STORAGE_KEY).then(formatDecksResults).catch((error)=>{
-    console.log("Api call error");
-    console.log(error.message);
- })
+  const promise = AsyncStorage.getItem(STORAGE_KEY).then(formatDecksResults).catch((error)=>{
+    console.log(`Api call error: ${error.message}`)
+  })
+  return promise
+  //return clearStorage()
 }
 
 function formatDecksResults (results) {
-  console.log("Called the formatDecksResults func of API")
   return results === null
     ? setDummyData()
-    : returnDecksArrays(JSON.parse(results))
+    : JSON.parse(results)
 }
 
 function setDummyData () {
@@ -43,15 +47,7 @@ function setDummyData () {
   }
 
   AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(mock))
-  console.log("setDummyData from API")
-  console.log(mock)
-  return Object.values(mock)
-}
-
-function returnDecksArrays (decks) {
-  console.log("Called the returnDecksArrays func of API")
-  console.log(decks)
-  return Object.values(decks)
+  return mock
 }
 
 export function getDeck (id) {
@@ -64,10 +60,7 @@ export function getDeck (id) {
 }
 
 export function saveDeckTitle (title) {
-  console.log("Called the saveDeckTitle func from API")
-  console.log(title)
   const trimtitle = title.replace(/ /g,'')
-  console.log(trimtitle)
   return AsyncStorage.mergeItem(STORAGE_KEY, JSON.stringify({
     [trimtitle]: {
       title: title,
@@ -77,9 +70,16 @@ export function saveDeckTitle (title) {
 }
 
 export function addCardToDeck (title, card) {
-  return AsyncStorage.mergeItem(STORAGE_KEY, JSON.stringify({
-    [title]: {
-      questions: [card]
-    }
-  }))
+  const promise = AsyncStorage.getItem(STORAGE_KEY, (err, result) => {
+    const obj = JSON.parse(result)
+    const questions = obj[title].questions
+    const savedTitle = obj[title].title
+    AsyncStorage.mergeItem(STORAGE_KEY, JSON.stringify({
+      [title]: {
+        title: savedTitle,
+        questions: questions.concat(card)
+      }
+    }))
+  })
+  return promise
 }

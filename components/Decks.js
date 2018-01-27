@@ -9,70 +9,76 @@ import {
 } from 'react-native'
 import { black, gray } from '../utils/colors'
 import { getDecks } from '../utils/api'
-import { getAllDecks } from '../actions'
+import { fetchAllDecks, setDeck } from '../actions'
 
 class Decks extends Component {
   componentDidMount() {
-    console.log("Começo de componentDidMount Decks.js")
     getDecks().then(
       (decks) => {
-        console.log("Called getDecks at Decks.js")
-        console.log(decks)
+        decks = (decks === undefined || decks === null) ? {} : decks
         this.props.loadDecks(decks)
       },
       (erro) => {
-        console.log("failed at Decks.js!")
-        console.log(erro)
+        console.log(`Failed at getDecks on Decks.js! Erro: ${erro}`)
       }
     ).catch((error) =>  {
         console.log('There has been a problem with your fetch operation: ' + error.message)
         throw error
     })
-    console.log("Fim de componentDidMount Decks.js")
   }
   
   render() {
-    const { decks } = this.props
+    const { decks, setDeckItem } = this.props
 
     return(
       <View style={styles.container}>
-        <FlatList
-          data={decks}
-          renderItem={({item}) => 
-            <View style={styles.item}>
-              <TouchableOpacity 
-                onPress={() => this.props.navigation.navigate(
-                'SingleDeck',
-                { item: item }
-              )}>
-                <Text style={[styles.text, {fontSize:30}]}>{item.title}</Text>
-                <Text style={[styles.text, styles.littletext]}>
-                  {item.questions.length} 
-                  <Text>
-                    {item.questions.length>1 ? ' cards' : ' card' }
+        {decks.length <= 0 && 
+          <Text style={[styles.text, {fontSize:26}]}>There are no decks yet!</Text>
+        }
+
+        {decks.length > 0 &&
+          <FlatList
+            data={decks}
+            renderItem={({item}) => 
+              <View style={styles.item}>
+                <TouchableOpacity 
+                  onPress={() => {
+                    setDeckItem(item)
+                    this.props.navigation.navigate(
+                      'SingleDeck',
+                      { title: item.title }
+                    )
+                  }
+                }>
+                  <Text style={[styles.text, {fontSize:30}]}>{item.title}</Text>
+                  <Text style={[styles.text, styles.littletext]}>
+                    {item.questions.length} 
+                    <Text>
+                      {item.questions.length>1 ? ' cards' : ' card' }
+                    </Text>
                   </Text>
-                </Text>
-              </TouchableOpacity>
-            </View>
-          }
-          keyExtractor={(item, index) => index}
-        />
+                </TouchableOpacity>
+              </View>
+            }
+            keyExtractor={(item, index) => index}
+          />
+        }
       </View>
     )
   }
 }
 
 function mapStateToProps (decks) {
-  console.log("mapStateToProps")
-  console.log(decks)
+  const decksArray = Object.values(decks.allDecks)
   return {
-    decks: decks.allDecks
+    decks: decksArray
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    loadDecks: (decks) => dispatch(getAllDecks(decks))
+    loadDecks: (decks) => dispatch(fetchAllDecks(decks)),
+    setDeckItem: (deck) => dispatch(setDeck(deck))
   }
 }
 

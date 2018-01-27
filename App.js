@@ -2,13 +2,14 @@ import React from 'react';
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import reducer from './reducers'
-import { View, StatusBar, Platform } from 'react-native';
+import { View, StatusBar } from 'react-native';
 import { TabNavigator, StackNavigator } from 'react-navigation'
 import { Constants } from 'expo'
-import { yellow, white, black } from './utils/colors'
+import { yellow, white, black, darkyellow } from './utils/colors'
 import Decks from './components/Decks'
 import NewDeck from './components/NewDeck'
 import SingleDeck from './components/SingleDeck'
+import NewCard from './components/NewCard'
 import Quiz from './components/Quiz'
 
 function MainStatusBar ({backgroundColor, ...props}) {
@@ -36,11 +37,25 @@ const Tabs = TabNavigator({
   navigationOptions: {
     header: null
   },
+  swipeEnabled: true,
+  animationEnabled: true,
   tabBarOptions: {
-    activeTintColor: Platform.OS === 'ios' ? yellow : black,
+    pressColor: darkyellow,
+    tabStyle: {
+      backgroundColor: white
+    },
+    labelStyle: {
+      fontWeight: 'bold',
+      color: black,
+      fontSize: 15
+    },
+    indicatorStyle: {
+      borderWidth: 2,
+      borderColor: yellow
+    },
     style: {
       height: 56,
-      backgroundColor: Platform.OS === 'ios' ? white : yellow,
+      backgroundColor: white,
       shadowColor: 'rgba(0, 0, 0, 0.24)',
       shadowOffset: {
         width: 0,
@@ -52,29 +67,29 @@ const Tabs = TabNavigator({
   }
 })
 
+const navStyle = {
+  headerTintColor: yellow,
+  headerStyle: {
+    backgroundColor: black,
+    height: 56
+  }
+}
+
 const MainNavigator = StackNavigator({
   Home: {
     screen: Tabs,
   },
   SingleDeck: {
     screen: SingleDeck,
-    navigationOptions: {
-      headerTintColor: yellow,
-      headerStyle: {
-        backgroundColor: black,
-        height: 56
-      }
-    }
+    navigationOptions: navStyle
+  },
+  NewCard: {
+    screen: NewCard,
+    navigationOptions: navStyle
   },
   Quiz: {
     screen: Quiz,
-    navigationOptions: {
-      headerTintColor: yellow,
-      headerStyle: {
-        backgroundColor: black,
-        height: 56
-      }
-    }
+    navigationOptions: navStyle
   }
 })
 

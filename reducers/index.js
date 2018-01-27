@@ -1,12 +1,12 @@
 import { 
   GET_ALL_DECKS, 
-  GET_DECK,
+  SET_DECK,
   ADD_DECK,
   ADD_CARD
 } from '../actions'
 
 const initialState = {
-  allDecks: [],
+  allDecks: {},
   deck: {},
   card: {}
 }
@@ -18,7 +18,7 @@ function decks (state = initialState, action) {
         ...state,
         allDecks: action.decks
       }
-    case GET_DECK :
+    case SET_DECK :
       return {
         ...state,
         deck: action.deck
@@ -27,17 +27,29 @@ function decks (state = initialState, action) {
       const trimtitle = action.title.replace(/ /g,'')
       return {
         ...state,
-        allDecks: state.allDecks.concat(
-          {
+        allDecks: {
+          ...state.allDecks,
+          [trimtitle]: {
             title: action.title,
             questions: []
           }
-        )
+        }
       }
     case ADD_CARD :
       return {
         ...state,
-        card: action.card
+        card: action.card,
+        deck: {
+          ...state.deck,
+          questions: state.deck.questions.concat(action.card)
+        },
+        allDecks: {
+          ...state.allDecks,
+          [action.title]: {
+            ...state.allDecks[action.title],
+            questions: state.deck.questions.concat(action.card)
+          }
+        }
       }
     default :
       return state

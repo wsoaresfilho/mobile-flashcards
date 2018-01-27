@@ -11,14 +11,17 @@ import { black, white, gray } from '../utils/colors'
 import { saveDeckTitle } from '../utils/api'
 import { addDeck } from '../actions'
 
+initialState = {
+  canSubmit: false,
+  deckTitle: ''
+}
+
 class NewDeck extends Component {
-  state = {
-    canSubmit: false,
-    deckTitle: ''
+  constructor(props) {
+    super(props)
+    this.state = initialState
   }
-  componentDidMount() {
-    this.setState({deckTitle: ''})
-  }
+
   clear = () => {
     this.setState({canSubmit:false, deckTitle: ''})
   }
@@ -29,19 +32,16 @@ class NewDeck extends Component {
     const name = this.state.deckTitle
     saveDeckTitle(name).then(
       () => {
-        console.log(`Before addDeck = ${name}`)
         this.props.addNewDeck(name)
         this.toHome()
       },
       (erro) => {
-        console.log("failed at Decks.js!")
-        console.log(erro)
+        console.log(`failed at saveDeckTitle on Decks.js! Erro: ${erro}`)
       }
     ).catch((error) => {
-      console.log('There has been a problem with your fetch operation: ' + error.message)
+      console.log('There has been a problem with saveDeckTitle operation: ' + error.message)
       throw error
     })
-    console.log("Fim de componentDidMount NewDecks.js")
     this.clear()
   }
   onChangeText = (text) => {
@@ -74,14 +74,6 @@ class NewDeck extends Component {
           </TouchableOpacity>
       </KeyboardAvoidingView>
     )
-  }
-}
-
-function mapStateToProps (decks) {
-  console.log("mapStateToProps")
-  console.log(decks)
-  return {
-    decks: decks.allDecks
   }
 }
 
@@ -134,6 +126,6 @@ const styles = StyleSheet.create({
 })
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(NewDeck)

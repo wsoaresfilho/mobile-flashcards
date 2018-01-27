@@ -1,48 +1,65 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { black, white, gray } from '../utils/colors'
 
-export default class SingleDeck extends Component {
+class SingleDeck extends Component {
   static navigationOptions = ({ navigation }) => {
-    const { item } = navigation.state.params
+    const { title } = navigation.state.params
 
     return {
-      title: item.title
+      title: title
     }
   }
 
   render() {
-    const { navigation } = this.props
-    const card = navigation.state.params.item
+    const { deck, title } = this.props
 
     return(
       <View style={styles.container}>
         <View style={styles.main}>
-          <Text style={[styles.text, {fontSize:30}]}>{card && card.title}</Text>
+          <Text style={[styles.text, {fontSize:30}]}>{deck && deck.title}</Text>
           <Text style={[styles.text, styles.littletext]}>
-            {card && card.questions.length} 
+            {deck && deck.questions.length} 
             <Text>
-              {card && card.questions.length>1 ? ' cards' : ' card' }
+              {deck && deck.questions.length>1 ? ' cards' : ' card' }
             </Text>
           </Text>
         </View>
         <View style={styles.buttons}>
-          <TouchableOpacity style={[styles.button, {backgroundColor: white}]}>
+          <TouchableOpacity 
+            style={[styles.button, {backgroundColor: white}]}
+            onPress={() => {
+              this.props.navigation.navigate(
+                'NewCard',
+                {title: title}
+              )}
+            }
+          >
             <Text style={[styles.btn, styles.btn1]}>Add Card</Text>
           </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.button, {backgroundColor: black}]}
-            onPress={() => this.props.navigation.navigate(
-              'Quiz',
-              { questions: card.questions }
-            )}
-          >
-            <Text style={[styles.btn, styles.btn2]}>Start Quiz</Text>
-          </TouchableOpacity>
+
+          {deck.questions.length > 0 &&
+            <TouchableOpacity 
+              style={[styles.button, {backgroundColor: black}]}
+              onPress={() => this.props.navigation.navigate(
+                'Quiz'
+              )}
+            >
+              <Text style={[styles.btn, styles.btn2]}>Start Quiz</Text>
+            </TouchableOpacity>
+          }
         </View>
       </View>
       
     )
+  }
+}
+
+function mapStateToProps (decks, { navigation }) {
+  return {
+    deck: decks.deck,
+    title: navigation.state.params.title.replace(/ /g,'')
   }
 }
 
@@ -91,3 +108,7 @@ const styles = StyleSheet.create({
     fontSize: 20
   }
 })
+
+export default connect(
+  mapStateToProps
+)(SingleDeck)
