@@ -2,6 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { black, white, gray } from '../utils/colors'
+import { 
+  clearLocalNotification,
+  setLocalNotification
+} from '../utils/notification'
 
 class SingleDeck extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -10,6 +14,11 @@ class SingleDeck extends Component {
     return {
       title: title
     }
+  }
+
+  startQuiz = () => {
+    clearLocalNotification().then(setLocalNotification)
+    this.props.navigation.navigate('Quiz')
   }
 
   render() {
@@ -42,9 +51,7 @@ class SingleDeck extends Component {
           {deck.questions.length > 0 &&
             <TouchableOpacity 
               style={[styles.button, {backgroundColor: black}]}
-              onPress={() => this.props.navigation.navigate(
-                'Quiz'
-              )}
+              onPress={this.startQuiz}
             >
               <Text style={[styles.btn, styles.btn2]}>Start Quiz</Text>
             </TouchableOpacity>
