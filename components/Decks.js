@@ -5,13 +5,18 @@ import {
   View, 
   FlatList, 
   StyleSheet, 
-  TouchableOpacity
+  TouchableOpacity,
+  Animated
 } from 'react-native'
 import { black, gray } from '../utils/colors'
 import { getDecks } from '../utils/api'
 import { fetchAllDecks, setDeck } from '../actions'
 
 class Decks extends Component {
+  state = {
+    fontSize: new Animated.Value(30)
+  }
+
   componentDidMount() {
     getDecks().then(
       (decks) => {
@@ -26,9 +31,33 @@ class Decks extends Component {
         throw error
     })
   }
+
+  goToDeck = (item) => {
+    const { fontSize } = this.state
+    fontSize.setValue(30)
+    Animated.timing(
+      fontSize,
+      {
+        toValue: 40,
+        duration: 200
+      }
+    ).start(() => {
+      Animated.timing(
+        fontSize,
+        {
+          toValue: 30,
+          duration: 200
+        }
+      ).start(() => this.props.navigation.navigate(
+        'SingleDeck',
+        { title: item.title }
+      ))
+    })
+  }
   
   render() {
-    const { decks, setDeckItem } = this.props
+    const { decks } = this.props
+    const { fontSize } = this.state
 
     return(
       <View style={styles.container}>
@@ -43,15 +72,13 @@ class Decks extends Component {
               <View style={styles.item}>
                 <TouchableOpacity 
                   onPress={() => {
-                    setDeckItem(item)
-                    this.props.navigation.navigate(
-                      'SingleDeck',
-                      { title: item.title }
-                    )
+                      this.props.setDeckItem(item)
+                      this.goToDeck(item)
+                    }
                   }
-                }>
-                  <Text style={[styles.text, {fontSize:30}]}>{item.title}</Text>
-                  <Text style={[styles.text, styles.littletext]}>
+                >
+                  <Animated.Text style={[styles.bigtext, {fontSize}]}>{item.title}</Animated.Text>
+                  <Text style={styles.littletext}>
                     {item.questions.length} 
                     <Text>
                       {item.questions.length>1 ? ' cards' : ' card' }
@@ -94,10 +121,11 @@ const styles = StyleSheet.create({
     borderStyle:'solid',
     borderBottomWidth:1
   },
-  text: {
+  bigtext: {
     textAlign: 'center'
   },
   littletext: {
+    textAlign: 'center',
     color: gray,
     fontSize: 20
   }
