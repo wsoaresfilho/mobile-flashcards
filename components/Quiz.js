@@ -2,6 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native'
 import { black, white, red, green, blue, lightgray, gray } from '../utils/colors'
+import { 
+  clearLocalNotification,
+  setLocalNotification
+} from '../utils/notification'
 
 initialState = {
   activeCard: 0,
@@ -19,6 +23,14 @@ class Quiz extends Component {
   constructor(props) {
     super(props)
     this.state = initialState
+  }
+  componentDidUpdate() {
+    const { questions } = this.props
+    const { activeCard } = this.state
+    
+    if(activeCard >= questions.length) {
+      clearLocalNotification().then(setLocalNotification)
+    }
   }
 
   turnCard = () => {
@@ -42,6 +54,7 @@ class Quiz extends Component {
   restartQuiz = () => {
     this.setState(initialState)
   }
+  
   render() {
     const { questions } = this.props
     const { activeCard, isAnswer, numOfHits } = this.state

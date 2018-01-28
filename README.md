@@ -22,6 +22,8 @@ npm install --global yarn
 
 You will also need to install the Expo Client on your device to simulate the App.
 
+The App was tested only on the Android Platform! I cannot garantee that it will work on IOS.
+
 ### Clone `mobile-flashcards`
 
 Clone the `mobile-flashcards` repository using git:

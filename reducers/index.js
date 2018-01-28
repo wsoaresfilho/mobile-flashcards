@@ -25,15 +25,17 @@ function decks (state = initialState, action) {
       }
     case ADD_DECK :
       const trimtitle = action.title.replace(/ /g,'')
+      const newDeck = {
+        title: action.title,
+        questions: []
+      }
       return {
         ...state,
         allDecks: {
           ...state.allDecks,
-          [trimtitle]: {
-            title: action.title,
-            questions: []
-          }
-        }
+          [trimtitle]: newDeck
+        },
+        deck: newDeck
       }
     case ADD_CARD :
       return {

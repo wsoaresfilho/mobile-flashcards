@@ -6,7 +6,9 @@ import {
   StyleSheet, 
   TouchableOpacity, 
   TextInput, 
-  KeyboardAvoidingView } from 'react-native'
+  KeyboardAvoidingView,
+  Keyboard 
+} from 'react-native'
 import { black, white, gray } from '../utils/colors'
 import { saveDeckTitle } from '../utils/api'
 import { addDeck } from '../actions'
@@ -25,15 +27,16 @@ class NewDeck extends Component {
   clear = () => {
     this.setState({canSubmit:false, deckTitle: ''})
   }
-  toHome = () => {
-    this.props.navigation.navigate('Decks')
+  goToDeck = (name) => {
+    this.props.navigation.navigate('SingleDeck', { title: name })
   }
   onSubmit = () => {
     const name = this.state.deckTitle
     saveDeckTitle(name).then(
       () => {
         this.props.addNewDeck(name)
-        this.toHome()
+        this.goToDeck(name)
+        Keyboard.dismiss()
       },
       (erro) => {
         console.log(`failed at saveDeckTitle on Decks.js! Erro: ${erro}`)

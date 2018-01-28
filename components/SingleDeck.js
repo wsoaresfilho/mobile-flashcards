@@ -2,10 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { black, white, gray } from '../utils/colors'
-import { 
-  clearLocalNotification,
-  setLocalNotification
-} from '../utils/notification'
 
 class SingleDeck extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -17,7 +13,6 @@ class SingleDeck extends Component {
   }
 
   startQuiz = () => {
-    clearLocalNotification().then(setLocalNotification)
     this.props.navigation.navigate('Quiz')
   }
 
