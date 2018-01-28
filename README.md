@@ -37,7 +37,7 @@ cd mobile-flashcards
 
 For installing and launching the project:
 
-* install all project dependencies with `npm install`
+* install all project dependencies with `yarn install`
 * start the development server with `yarn start`
 
 

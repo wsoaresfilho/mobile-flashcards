@@ -112,7 +112,7 @@ class Quiz extends Component {
               </TouchableOpacity>
               <TouchableOpacity 
                 style={[styles.button, {backgroundColor: black}]}
-                onPress={this.props.goBack}
+                onPress={() => this.props.navigation.goBack()}
               >
                 <Text style={[styles.btn]}>Back to Deck</Text>
               </TouchableOpacity>
@@ -128,12 +128,6 @@ function mapStateToProps (decks) {
   return {
     deck: decks.deck,
     questions: decks.deck.questions
-  }
-}
-
-function mapDispatchToProps (dispatch, { navigation }) {
-  return {
-    goBack: () => navigation.goBack()
   }
 }
 
@@ -193,6 +187,5 @@ const styles = StyleSheet.create({
 })
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(Quiz)
